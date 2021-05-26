@@ -1,6 +1,6 @@
 spring:
   application:
-    name: boot-jwt-auth-server
+    name: jwt-auth-server
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -26,3 +26,10 @@ spring:
 logging:
   level:
     me.hwanse: info
+
+jwt:
+  token:
+    header: Authorization
+    issuer: ${spring.application.name}
+    secret: aHdhbnNlLXNwcmluZy1zZWN1cml0eS1qd3QtYXV0aC1zZXJ2ZXItc2VjcmV0LWtleQo=
+    expiration: 3600

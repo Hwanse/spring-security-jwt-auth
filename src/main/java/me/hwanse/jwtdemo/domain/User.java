@@ -24,16 +24,17 @@ public class User {
   @Column(name = "users_id")
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 50)
   private String name;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 50)
   private String nickname;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 50)
   private String email;
 
-  private int loginCount;
+  @Column(nullable = false, length = 100)
+  private String password;
 
   private LocalDateTime createAt;
 
