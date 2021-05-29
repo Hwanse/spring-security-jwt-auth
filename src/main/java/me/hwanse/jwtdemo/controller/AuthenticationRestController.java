@@ -1,5 +1,7 @@
 package me.hwanse.jwtdemo.controller;
 
+import static me.hwanse.jwtdemo.controller.ApiResult.OK;
+
 import javax.validation.Valid;
 import me.hwanse.jwtdemo.controller.dto.LoginDto;
 import me.hwanse.jwtdemo.controller.dto.TokenDto;
@@ -22,8 +24,7 @@ public class AuthenticationRestController {
   }
 
   @PostMapping("/api/login")
-  public ResponseEntity login(@Valid @RequestBody LoginDto loginDto) {
-
+  public ResponseEntity<ApiResult>  login(@Valid @RequestBody LoginDto loginDto) {
     Authentication authenticationToken = new JwtAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
     Authentication authenticated = authenticationManager.authenticate(authenticationToken);
 
@@ -32,7 +33,7 @@ public class AuthenticationRestController {
 
     return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + jwt)
-                    .body(new TokenDto(jwt));
+                    .body(OK(new TokenDto(jwt)));
   }
 
 }

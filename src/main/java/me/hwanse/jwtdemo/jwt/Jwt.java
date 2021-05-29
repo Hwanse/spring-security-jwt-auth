@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import me.hwanse.jwtdemo.domain.Authority;
 import me.hwanse.jwtdemo.domain.User;
@@ -37,7 +38,8 @@ public class Jwt {
 
   public Key settingKey(JwtProperty jwtProperty) {
     byte[] decodedKeyBytes = Decoders.BASE64.decode(jwtProperty.getSecret());
-    return Keys.hmacShaKeyFor(decodedKeyBytes);
+    SecretKey secretKey = Keys.hmacShaKeyFor(decodedKeyBytes);
+    return secretKey;
   }
 
   public String createToken(User user) {
