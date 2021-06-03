@@ -2,6 +2,7 @@ package me.hwanse.jwtdemo.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +29,7 @@ class AuthenticationRestControllerTest {
   private ObjectMapper objectMapper;
 
   private final String AUTHORIZATION = "Authorization";
+
   @Test
   @DisplayName("로그인 인증 - 성공")
   public void login() throws Exception {
@@ -42,7 +44,19 @@ class AuthenticationRestControllerTest {
         .andExpect(header().exists(AUTHORIZATION))
         .andExpect(jsonPath("$.success", Matchers.is(true)))
         .andExpect(jsonPath("$.response.token").exists());
+  }
 
+  @Test
+  @DisplayName("로그인 인증 - 실패")
+  public void login_failure() throws Exception {
+    // given
+    LoginDto loginDto = new LoginDto("admin@gmail.com", "1234");
+
+    // when
+    mockMvc.perform(post("/api/login")
+      .contentType(MediaType.APPLICATION_JSON_VALUE)
+      .content(objectMapper.writeValueAsString(loginDto)))
+      .andExpect(status().isUnauthorized());
   }
 
 }

@@ -1,5 +1,6 @@
 package me.hwanse.jwtdemo.controller;
 
+import javax.validation.Valid;
 import me.hwanse.jwtdemo.controller.dto.JoinRequest;
 import me.hwanse.jwtdemo.controller.dto.UserDto;
 import me.hwanse.jwtdemo.service.UserService;
@@ -17,7 +18,7 @@ public class UserRestController {
   }
 
   @PostMapping("/api/join")
-  public ApiResult<?> join(@RequestBody JoinRequest joinRequest) {
+  public ApiResult<?> join(@Valid @RequestBody JoinRequest joinRequest) {
     return ApiResult.OK(
       new UserDto(userService.join(joinRequest.newUser()))
     );
