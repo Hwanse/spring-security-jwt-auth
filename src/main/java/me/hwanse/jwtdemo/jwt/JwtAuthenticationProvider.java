@@ -30,7 +30,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
       throw new BadCredentialsException("Invalid Password");
     }
     JwtAuthenticationToken jwtAuthenticationToken =
-      new JwtAuthenticationToken(userContext.getUser(), null, userContext.getAuthorities());
+      new JwtAuthenticationToken(new JwtAuthentication(userContext.getUser()), null,
+        userContext.getAuthorities());
 
     String newJwt = jwt.createToken(userContext.getUser());
     jwtAuthenticationToken.setDetails(newJwt);
@@ -41,4 +42,5 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
   public boolean supports(Class<?> authentication) {
     return JwtAuthenticationToken.class.isAssignableFrom(authentication);
   }
+
 }

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.core.style.ToStringCreator;
 
 @Entity
 @Table(name = "authority")
@@ -26,5 +27,13 @@ public class Authority {
 
   public Authority(String name) {
     this.name = name;
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringCreator(this)
+      .append("id", id)
+      .append("name", name)
+      .toString();
   }
 }
