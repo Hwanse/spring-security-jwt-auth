@@ -2,15 +2,15 @@ package me.hwanse.jwtdemo.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,11 @@ import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import me.hwanse.jwtdemo.domain.Authority;
 import me.hwanse.jwtdemo.domain.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @Slf4j
@@ -64,6 +68,7 @@ public class Jwt {
                   .build()
                   .parseClaimsJws(token)
                   .getBody();
+
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
       log.debug("잘못된 JWT 서명입니다.");
     } catch (ExpiredJwtException e) {
@@ -77,6 +82,35 @@ public class Jwt {
     return Optional.ofNullable(claims);
   }
 
+  public Optional<Authentication> getAuthentication(Claims claims, String token) {
+    String seq = claims.get("seq", String.class);
+    String username = claims.get("username", String.class);
+    String email = claims.get("email", String.class);
+    String roles = claims.get("roles", String.class);
+    Collection<? extends GrantedAuthority> authorities =
+      Arrays.stream(roles.split(","))
+        .map(SimpleGrantedAuthority::new)
+        .collect(Collectors.toSet());
+
+    if (validateClaims(seq, username, email, roles)) {
+      JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(
+        new JwtAuthentication(Long.valueOf(seq), email, username, authorities), null, authorities);
+      jwtAuthenticationToken.setDetails(token);
+      return Optional.ofNullable(jwtAuthenticationToken);
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  private boolean validateClaims(String seq, String username, String email, String roles) {
+    if (StringUtils.hasText(seq) && StringUtils.hasText(username)
+      && StringUtils.hasText(email) && StringUtils.hasText(roles)) {
+      return true;
+    }
+
+    return false;
+  }
+
   public Map<String, Object> defaultHeader() {
     Map<String, Object> headers = new HashMap<>();
     headers.put("typ", HEADER_TYPE);
@@ -86,6 +120,7 @@ public class Jwt {
 
   public Map<String, Object> setClaims(User user) {
     Map<String, Object> claims = new HashMap<>();
+    claims.put("seq", String.valueOf(user.getId()));
     claims.put("username", user.getName());
     claims.put("email", user.getEmail());
     claims.put("roles", authoritiesString(user.getAuthorities()));

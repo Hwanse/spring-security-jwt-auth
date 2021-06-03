@@ -2,18 +2,13 @@ package me.hwanse.jwtdemo.jwt;
 
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,27 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (token != null) {
         Claims claims = jwt.verifyToken(token).orElseThrow();
 
-        String username = claims.get("username", String.class);
-        String email = claims.get("email", String.class);
-        String roles = claims.get("roles", String.class);
-        Collection<? extends GrantedAuthority> authorities =
-          Arrays.stream(roles.split(","))
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toSet());
-
-        if (validateClaims(username, email, roles)) {
-          JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(
-            new User(email, null, authorities), null, authorities);
-          jwtAuthenticationToken.setDetails(token);
-          SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-          log.debug("인증 정보를 저장했습니다. '{}' / URI : {}", jwtAuthenticationToken.getPrincipal(),
-            requestURI);
-        }
+        Authentication authentication = jwt.getAuthentication(claims, token).orElseThrow();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.debug("인증 정보를 저장했습니다. '{}' / URI : {}", authentication.getPrincipal(),requestURI);
       }
     }
 
     filterChain.doFilter(request, response);
-
   }
 
   /**
@@ -78,13 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return true;
     }
 
-    return false;
-  }
-
-  private boolean validateClaims(String username, String email, String roles) {
-    if (StringUtils.hasText(username) && StringUtils.hasText(email) && StringUtils.hasText(roles)) {
-      return true;
-    }
     return false;
   }
 
