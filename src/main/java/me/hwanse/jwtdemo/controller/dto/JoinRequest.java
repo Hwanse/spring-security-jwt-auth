@@ -1,11 +1,14 @@
 package me.hwanse.jwtdemo.controller.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import lombok.Getter;
 import me.hwanse.jwtdemo.domain.User;
 import org.springframework.core.style.ToStringCreator;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+@Getter
 public class JoinRequest {
 
   @Email
@@ -32,22 +35,6 @@ public class JoinRequest {
 
   public User newUser() {
     return new User(username, nickname, email, password);
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getNickname() {
-    return nickname;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   @Override

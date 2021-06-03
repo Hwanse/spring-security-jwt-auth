@@ -1,15 +1,14 @@
 package me.hwanse.jwtdemo.controller.dto;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import lombok.Getter;
 import me.hwanse.jwtdemo.domain.Authority;
 import me.hwanse.jwtdemo.domain.User;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
 public class UserDto {
 
   private Long id;
@@ -20,17 +19,18 @@ public class UserDto {
   private LocalDateTime modifiedAt;
   private LocalDateTime deletedAt;
   private boolean beDeleted;
-  private Set<Authority> authorities = new HashSet<>();
+  private Set<Authority> authorities;
 
   public UserDto(User user) {
     this.id = user.getId();
-    this.name = name;
-    this.nickname = nickname;
-    this.email = email;
-    this.createAt = createAt;
-    this.modifiedAt = modifiedAt;
-    this.deletedAt = deletedAt;
-    this.beDeleted = beDeleted;
-    this.authorities = authorities;
+    this.name = user.getName();;
+    this.nickname = user.getNickname();
+    this.email = user.getEmail();
+    this.createAt = user.getCreateAt();
+    this.modifiedAt = user.getModifiedAt();
+    this.deletedAt = user.getDeletedAt();
+    this.beDeleted = user.isBeDeleted();
+    this.authorities = new HashSet<>(user.getAuthorities());
   }
+
 }

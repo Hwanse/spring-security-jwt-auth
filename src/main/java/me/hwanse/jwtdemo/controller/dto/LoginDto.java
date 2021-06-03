@@ -1,9 +1,12 @@
 package me.hwanse.jwtdemo.controller.dto;
 
+import lombok.Getter;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Getter
 public class LoginDto {
 
   @Email
@@ -16,14 +19,6 @@ public class LoginDto {
   public LoginDto(String email, String password) {
     this.email = email;
     this.password = password;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
 }
