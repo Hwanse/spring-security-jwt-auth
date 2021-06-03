@@ -1,11 +1,7 @@
 package me.hwanse.jwtdemo.service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
-import me.hwanse.jwtdemo.domain.Authority;
 import me.hwanse.jwtdemo.domain.User;
 import me.hwanse.jwtdemo.jwt.UserContext;
 import me.hwanse.jwtdemo.repository.UserRepository;
@@ -32,9 +28,9 @@ public class JwtUserDetailService implements UserDetailsService {
   }
 
   private UserContext createUserContext(User user) {
-    List<SimpleGrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+    Set<SimpleGrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
       .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
     return new UserContext(user, grantedAuthorities);
   }

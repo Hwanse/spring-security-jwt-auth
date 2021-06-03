@@ -34,4 +34,9 @@ public class UserService {
     return userRepository.findWithAuthorityByEmail(email).isPresent();
   }
 
+  @Transactional(readOnly = true)
+  public User getUser(Long id) {
+    return userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+  }
+
 }
