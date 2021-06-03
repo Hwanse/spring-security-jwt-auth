@@ -31,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.jwt = jwt;
   }
 
+
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -43,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     .and()
+      .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
       .authorizeRequests()
       .antMatchers("/api/login").permitAll()
       .antMatchers("/api/join").permitAll()
@@ -50,10 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     .and()
       .exceptionHandling()
       .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-      .accessDeniedHandler(jwtAccessDenied)
-    .and()
-      .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
-    ;
+      .accessDeniedHandler(jwtAccessDenied);
   }
 
   @Override
