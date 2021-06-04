@@ -2,6 +2,7 @@ package me.hwanse.jwtdemo.jwt;
 
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
+import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       String token = resolveToken(httpServletRequest);
       if (token != null) {
         Claims claims = jwt.verifyToken(token).orElseThrow();
+
+        if (canRefresh(claims, 300 * 1000L)) {  // 5분 전
+          String refreshedToken = jwt.getRefreshedToken(token);
+          response.setHeader(AUTHORIZATION_HEADER, String.format("%s %s", BEARER, refreshedToken));
+          log.info("before token : {} / refreshed token : {}", token,refreshedToken);
+        }
 
         Authentication authentication = jwt.getAuthentication(claims, token).orElseThrow();
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -72,6 +79,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return bearerToken.split(" ")[1];
     }
     return null;
+  }
+
+  private boolean canRefresh(Claims claims, long refreshRangeMills) {
+    Date now = new Date();
+    Date expiration = claims.getExpiration();
+
+    if (expiration != null) {
+      long remainTimeMills = expiration.getTime() - now.getTime();
+      return remainTimeMills < refreshRangeMills;
+    }
+    return false;
   }
 
 }
