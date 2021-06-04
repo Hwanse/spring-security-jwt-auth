@@ -18,11 +18,6 @@ spring:
         show_sql: true
         format_sql: true
 
-  security:
-    user:
-      name: user
-      password: 1234
-
 logging:
   level:
     me.hwanse: info
