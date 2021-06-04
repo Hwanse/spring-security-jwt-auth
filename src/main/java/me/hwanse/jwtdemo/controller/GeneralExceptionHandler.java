@@ -35,7 +35,7 @@ public class GeneralExceptionHandler {
     MethodArgumentNotValidException.class
   })
   public ResponseEntity<?> handleBadRequestException(Exception e) {
-    log.debug("Bad request exception occurred: {}", e.getMessage(), e);
+    log.info("Bad request exception occurred: {}", e.getMessage(), e);
     return newResponse(e, HttpStatus.BAD_REQUEST);
   }
 
@@ -46,13 +46,13 @@ public class GeneralExceptionHandler {
 
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<?> handleHttpMediaTypeException(Exception e) {
-    log.debug("Http media type exception occurred: {}", e.getMessage(), e);
+    log.info("Http media type exception occurred: {}", e.getMessage(), e);
     return newResponse(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
   }
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<?> handleAuthenticationException(Exception e) {
-    log.debug("Authentication exception occurred: {}", e.getMessage(), e);
+    log.info("Authentication exception occurred: {}", e.getMessage(), e);
     return newResponse(e, HttpStatus.UNAUTHORIZED);
   }
 
