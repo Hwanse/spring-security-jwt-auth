@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationRestController {
 
   private final AuthenticationManager authenticationManager;
+  private final String BEARER = "Bearer";
 
   public AuthenticationRestController(AuthenticationManager authenticationManager) {
     this.authenticationManager = authenticationManager;
@@ -32,8 +34,10 @@ public class AuthenticationRestController {
     String jwt = (String) authenticated.getDetails();
 
     return ResponseEntity.ok()
-                    .header("Authorization", "Bearer " + jwt)
-                    .body(OK(new TokenDto(jwt)));
+                    .header("Authorization",  String.format("%s %s", BEARER, jwt))
+                    .body(
+                      OK(new TokenDto(String.format("%s %s", BEARER, jwt)))
+                    );
   }
 
 }
