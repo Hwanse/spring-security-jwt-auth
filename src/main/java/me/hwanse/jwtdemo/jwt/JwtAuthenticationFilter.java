@@ -62,7 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     AntPathMatcher pathMatcher = new AntPathMatcher();
     String requestURI = request.getRequestURI();
 
-    if (pathMatcher.match("/api/login", requestURI) || pathMatcher.match("/api/join", requestURI)) {
+    if (pathMatcher.match("/login", requestURI)
+      || pathMatcher.match("/api/login", requestURI)
+      || pathMatcher.match("/api/join", requestURI)) {
       return true;
     }
 
