@@ -60,6 +60,20 @@ public class Jwt {
               .compact();
   }
 
+  public String refreshToken(Claims claims) {
+    Date exp = new Date();
+    exp.setTime(exp.getTime() + (jwtProperty.getExpiration() * 1000L));
+
+    return Jwts.builder()
+              .setHeader(defaultHeader())
+              .setIssuer(jwtProperty.getIssuer())
+              .setSubject("userInfo")
+              .setClaims(claims)
+              .setExpiration(exp)
+              .signWith(key, SignatureAlgorithm.HS256)
+              .compact();
+  }
+
   public Optional<Claims> verifyToken(String token) {
     Claims claims = null;
     try {
@@ -80,6 +94,11 @@ public class Jwt {
     }
 
     return Optional.ofNullable(claims);
+  }
+
+  public String getRefreshedToken(String token) {
+    Claims claims = verifyToken(token).orElseThrow();
+    return refreshToken(claims);
   }
 
   public Optional<Authentication> getAuthentication(Claims claims, String token) {
