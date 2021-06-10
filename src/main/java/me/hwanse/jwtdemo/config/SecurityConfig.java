@@ -5,6 +5,7 @@ import me.hwanse.jwtdemo.jwt.JwtAccessDenied;
 import me.hwanse.jwtdemo.jwt.JwtAuthenticationEntryPoint;
 import me.hwanse.jwtdemo.jwt.JwtAuthenticationFilter;
 import me.hwanse.jwtdemo.jwt.JwtAuthenticationProvider;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -48,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
       .authorizeRequests()
       .antMatchers("/login").permitAll()
+      .antMatchers("/signup").permitAll()
       .antMatchers("/api/login").permitAll()
       .antMatchers("/api/join").permitAll()
       .anyRequest().authenticated()
@@ -61,7 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     web
       .ignoring()
-      .antMatchers("/h2-console/**");
+      .antMatchers("/h2-console/**", "/node_modules/**")
+      .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
   }
 
   @Bean
