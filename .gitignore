@@ -106,3 +106,6 @@ buildNumber.properties
 .flattened-pom.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,intellij+all
+/src/main/resources/static/node_modules/
+/src/main/resources/static/node/
+/src/main/resources/static/etc/

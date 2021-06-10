@@ -2,16 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="/node_modules/foundation-sites/dist/css/foundation.css">
+  <link rel="stylesheet" type="text/css" href="/node_modules/foundation-sites/dist/css/foundation-float.css">
+  <link rel="stylesheet" type="text/css" href="/css/foundation-custom.css">
 </head>
 <body>
-
   <div id="content">
-    <form>
-      <label>ID</label><input type="text" id="email" name="email"><br>
-      <label>PW</label><input type="password" id="password" name="password"><br>
-      <button type="button" id="login-button" onclick="login()">로그인</button>
-    </form>
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="large-4 medium-6 small-12 cell callout form-section">
+          <div class="grid-x grid-padding-x">
+            <div class="large-12 medium-12 small-12 text-center header">
+              <h1> SIGN IN </h1>
+            </div>
+            <div class="large-12 columns cell">
+              <form>
+                <div class="grid-x grid-padding-x">
+                  <div class="large-12 medium-12 cell">
+                    <input type="text" id="email" placeholder="Enter Email">
+                  </div>
+                  <div class="large-12 medium-12 cell">
+                    <input type="password" id="password" placeholder="Enter Password">
+                  </div>
+                  <div class="large-12 medium-12 cell">
+                    <a class="button primary login-btn" href="#" onclick="login()">Login</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="grid-x grid-padding-x sign-section">
+            <div class="large-12 small-12 text-center last-text">
+              <span>Don't have an account ?
+                <a href="/signup" class="large-12">Signup</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script type="application/javascript">
@@ -52,7 +82,6 @@
           }
         }
       }
-
 
       xhr.open("GET", "/");
       xhr.setRequestHeader(authorizationHeader, sessionStorage.getItem(authorizationHeader));

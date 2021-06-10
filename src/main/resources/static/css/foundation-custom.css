@@ -1,0 +1,35 @@
+body{
+  background-color: white !important;
+}
+.form-section{
+  background-color:#FCFCFC;
+  position: absolute;
+  left:50%;
+  right: 50%;
+  transform: translate(-50%,50%);
+  z-index: 2;
+}
+.header h1{
+  font-size:22px;
+  color:#37363B;
+  margin-bottom:40px;
+}
+.login-btn{
+  width: 100%;
+}
+.sign-section{
+  margin:15px 0px;
+}
+.login-section{
+  background-color: #000 !important;
+}
+@media (min-width:320px) and (max-width:640px){
+  .login-section{
+    width:80%;
+  }
+}
+@media (min-width:768px) and (max-width:1024px){
+  .login-section{
+    width:80%;
+  }
+}
