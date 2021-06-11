@@ -60,7 +60,7 @@
             let json = JSON.parse(xhr.response);
             let token = json.response.token;
             sessionStorage.setItem(authorizationHeader, token);
-            goHome();
+            goHome(token);
           } else {
             console.log("로그인 실패 : " + xhr.responseText);
           }
@@ -72,27 +72,10 @@
       xhr.send(JSON.stringify(loginData));
     }
 
-    function goHome() {
-      let xhr = new XMLHttpRequest();
-
-      xhr.onload = function () {
-        if (xhr.readyState === xhr.DONE) {
-          if (xhr.status === 200 || xhr.status === 201) {
-            changePage(xhr.response);
-          }
-        }
-      }
-
-      xhr.open("GET", "/");
-      xhr.setRequestHeader(authorizationHeader, sessionStorage.getItem(authorizationHeader));
-      xhr.send();
+    function goHome(token) {
+      location.href = "/?token=" + token;
     }
 
-    function changePage(response) {
-      let parsedHtml = new DOMParser().parseFromString(response, "text/html");
-      let content = parsedHtml.getElementById("content").innerHTML;
-      document.getElementById("content").innerHTML = content;
-    }
   </script>
 </body>
 </html>
